@@ -1,4 +1,4 @@
-**As a** [role]  
+**As a** User
 **I need** [function]  
 **So that** [benefit]  
       
