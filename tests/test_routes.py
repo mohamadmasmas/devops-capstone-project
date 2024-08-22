@@ -69,6 +69,14 @@ class TestAccountService(TestCase):
             account.id = new_account["id"]
             accounts.append(account)
         return accounts
+    
+    def get_account_count(self):
+        """save the current number of account"""
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        # logging.debug("data = %s", data)
+        return len(data)
 
     ######################################################################
     #  A C C O U N T   T E S T   C A S E S
@@ -165,16 +173,27 @@ class TestAccountService(TestCase):
         updated_account = response.get_json()
         self.assertEqual(updated_account["address"], "notrealcom")
 
-    # def test_delete_product(self):
-    #     """It should Delete a Product"""
-    #     products = self._create_products(5)
-    #     product_count = self.get_product_count()
-    #     test_product = products[0]
-    #     response = self.client.delete(f"{BASE_URL}/{test_product.id}")
-    #     self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-    #     self.assertEqual(len(response.data), 0)
-    #     # make sure they are deleted
-    #     response = self.client.get(f"{BASE_URL}/{test_product.id}")
-    #     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    #     new_count = self.get_product_count()
-    #     self.assertEqual(new_count, product_count - 1)
+    # Test Delete Account
+    def test_delete_account(self):
+        """It should Delete an account"""
+        accounts = self._create_accounts(5)
+        account_count = self.get_account_count()
+        test_account = accounts[0]
+        response = self.client.delete(f"{BASE_URL}/{test_account.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # make sure they are deleted
+        response = self.client.get(f"{BASE_URL}/{test_account.id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        new_count = self.get_account_count()
+        self.assertEqual(new_count, account_count - 1)
+
+    # Test Read Account
+    def test_get_account(self):
+        """It should Get a single Product"""
+        # get the id of a an account
+        test_account = self._create_accounts(1)[0]
+        response = self.client.get(f"{BASE_URL}/{test_account.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["name"], test_account.name)

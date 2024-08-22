@@ -102,7 +102,21 @@ def list_accounts():
 # READ AN ACCOUNT
 ######################################################################
 
-# ... place you code here to READ an account ...
+@app.route("/accounts/<int:account_id>", methods=["GET"])
+def get_account(account_id):
+    """
+    Retrieve a single account
+
+    This endpoint will return a account based on it's id
+    """
+    app.logger.info("Request to Retrieve a product with id [%s]", account_id)
+
+    account = Account.find(account_id)
+    if not account:
+        abort(status.HTTP_404_NOT_FOUND, f"account with id '{account_id}' was not found.")
+
+    app.logger.info("Returning product: %s", account.name)
+    return account.serialize(), status.HTTP_200_OK
 
 
 ######################################################################
@@ -133,7 +147,20 @@ def update_account(account_id):
 # DELETE AN ACCOUNT
 ######################################################################
 
-# ... place you code here to DELETE an account ...
+@app.route("/accounts/<int:account_id>", methods=["DELETE"])
+def delete_account(account_id):
+    """
+    Delete account
+
+    This endpoint will delete an account based the id specified in the path
+    """
+    app.logger.info("Request to Delete a product with id [%s]", account_id)
+
+    account = Account.find(account_id)
+    if account:
+        account.delete()
+
+    return "", status.HTTP_204_NO_CONTENT
 
 
 ######################################################################
