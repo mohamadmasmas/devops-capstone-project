@@ -212,4 +212,3 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         new_count = self.get_account_count()
         self.assertEqual(new_count, account_count - 1)
-
