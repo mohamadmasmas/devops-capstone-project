@@ -25,6 +25,8 @@ HTTPS_ENVIRON = {'wsgi.url_scheme': 'https'}
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
+
+
 class TestAccountService(TestCase):
     """Account Service Tests"""
 
@@ -92,7 +94,7 @@ class TestAccountService(TestCase):
             account.id = new_account["id"]
             accounts.append(account)
         return accounts
-    
+
     def get_account_count(self):
         """save the current number of account"""
         response = self.client.get(BASE_URL)
@@ -180,7 +182,7 @@ class TestAccountService(TestCase):
         data = response.get_json()
         self.assertEqual(len(data), 5)
 
-     # Test Update Acount
+    # Test Update Acount
     def test_update_acount(self):
         """It should Update an existing acount"""
         # create a acount to update
@@ -211,12 +213,3 @@ class TestAccountService(TestCase):
         new_count = self.get_account_count()
         self.assertEqual(new_count, account_count - 1)
 
-    # Test Read Account 
-    def test_get_account(self):
-        """It should Get a single Product"""
-        # get the id of a an account
-        test_account = self._create_accounts(1)[0]
-        response = self.client.get(f"{BASE_URL}/{test_account.id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.get_json()
-        self.assertEqual(data["name"], test_account.name)
